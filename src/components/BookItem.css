@@ -1,0 +1,37 @@
+.book-item {
+  display: flex;
+  padding: 16px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.book-image img {
+  width: 128px;
+  height: auto;
+  border-radius: 4px;
+}
+
+.book-info {
+  margin-left: 16px;
+  flex: 1;
+}
+
+.book-title {
+  margin: 0 0 8px 0;
+  font-size: 18px;
+  color: #333;
+}
+
+.book-authors {
+  margin: 0;
+  color: #666;
+  font-size: 14px;
+}
+
+.book-description {
+  margin: 8px 0 0 0;
+  color: #666;
+  font-size: 14px;
+  line-height: 1.4;
+}
