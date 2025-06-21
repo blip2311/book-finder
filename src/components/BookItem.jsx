@@ -16,15 +16,8 @@ const BookItem = ({ book }) => {
       <div className="book-info">
         <h3 className="book-title">{title}</h3>
         {authors && <p className="book-authors">{authors.join(", ")}</p>}
-        {description && (
-          <p className="book-description">
-            {description}
-          </p>
-        )}
-        <button
-          className="save_button"
-          data-bookid={book.id}
-        >
+        {description && <p className="book-description">{description}</p>}
+        <button className="save_button" data-bookid={book.id}>
           Save
         </button>
       </div>

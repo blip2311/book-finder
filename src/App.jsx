@@ -1,17 +1,20 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./App.css";
 import SearchBar from "./components/SearchBar";
 import BookItem from "./components/BookItem";
+import PopupMessage from "./components/PopupMessage";
 
 function App() {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [type, setType] = useState(null);
+  const [message, setMessage] = useState(null);
   const [books, setBooks] = useState([]);
   const [savedBooks, setSavedBooks] = useState([]);
+  const [popupVisible, setPopupVisible] = useState(false);
 
   const handleSearch = async (term) => {
-    setLoading(true);
-    setError(null);
+    setType("loading");
+    setMessage("Loading...");
+    setBooks([]);
 
     try {
       const encodedTerm = encodeURIComponent(term);
@@ -24,10 +27,22 @@ function App() {
       const data = await response.json();
       setBooks(data.items || []);
     } catch (err) {
-      setError(err.message);
-      setBooks([]);
+      setType("error");
+      setMessage(err.message);
     } finally {
-      setLoading(false);
+      setMessage((msg) => (msg === "Loading..." ? null : msg));
+      setType((val) => (val === "loading" ? null : val));
+    }
+  };
+
+  useEffect(() => {
+    setPopupVisible(type !== null);
+  }, [type]);
+
+  const handleClosePopup = (event) => {
+    if (event.target.classList.contains("popup-close")) {
+      setMessage((msg) => (msg !== "Loading..." ? null : msg));
+      setType((val) => (val !== "loading" ? null : val));
     }
   };
 
@@ -52,16 +67,21 @@ function App() {
     <div className="App">
       <h1>Book Finder App 📚</h1>
       <SearchBar onSearch={handleSearch} />
-      {loading && <p>Loading...</p>}
-      {error && <p className="error">{error}</p>}
       <div className="books-container" onClick={handleSaveClicked}>
-        {books.length === 0 && !loading && (
+        {books.length === 0 && !type && (
           <p>No books found. Try a different search term.</p>
         )}
         {books.map((book) => (
           <BookItem key={book.id} book={book} />
         ))}
       </div>
+      {popupVisible && (
+        <PopupMessage
+          type={type}
+          message={message}
+          onClose={handleClosePopup}
+        />
+      )}
     </div>
   );
 }
